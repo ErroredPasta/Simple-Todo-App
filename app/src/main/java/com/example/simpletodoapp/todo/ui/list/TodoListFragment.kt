@@ -9,9 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
+import com.example.simpletodoapp.R
 import com.example.simpletodoapp.databinding.FragmentTodoListBinding
 import com.example.simpletodoapp.todo.ui.mapper.toTodoUiState
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +25,7 @@ class TodoListFragment : Fragment() {
     private val viewModel by viewModels<TodoListViewModel>()
     private val adapter by lazy { TodoAdapter() }
     private var recyclerView: RecyclerView? = null
+    private val navController by lazy { findNavController() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +41,9 @@ class TodoListFragment : Fragment() {
             .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
             .onEach { todos ->
                 val todoUiStates = todos.map { todo ->
-                    todo.toTodoUiState(onClick = { /* TODO: 2023-04-27 목 21:30, Navigate to detail screen */ })
+                    todo.toTodoUiState(onClick = {
+                        navController.navigate(R.id.action_todoListFragment_to_todoInsertFragment)
+                    })
                 }
 
                 adapter.submitList(todoUiStates)

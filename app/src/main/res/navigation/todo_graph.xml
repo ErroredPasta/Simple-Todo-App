@@ -9,6 +9,15 @@
         android:id="@+id/todoListFragment"
         android:name="com.example.simpletodoapp.todo.ui.list.TodoListFragment"
         android:label="TodoListFragment"
-        tools:layout="@layout/fragment_todo_list" />
+        tools:layout="@layout/fragment_todo_list">
+        <action
+            android:id="@+id/action_todoListFragment_to_todoInsertFragment"
+            app:destination="@id/todoInsertFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/todoInsertFragment"
+        android:name="com.example.simpletodoapp.todo.ui.insert.TodoInsertFragment"
+        android:label="TodoInsertFragment"
+        tools:layout="@layout/fragment_todo_insert" />
 
 </navigation>

@@ -13,4 +13,16 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/view_holder_todo" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/navigate_todo_add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_padding"
+        android:contentDescription="Navigate to Todo add screen"
+        app:backgroundTint="@color/purple_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_create_24"
+        app:tint="@color/white"
+        tools:ignore="HardcodedText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

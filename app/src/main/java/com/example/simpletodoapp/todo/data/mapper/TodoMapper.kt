@@ -8,3 +8,9 @@ internal fun TodoEntity.toTodo() = Todo(
     todo = todo,
     description = description
 )
+
+internal fun Todo.toTodoEntity() = TodoEntity(
+    id = id,
+    todo = todo,
+    description = description
+)
