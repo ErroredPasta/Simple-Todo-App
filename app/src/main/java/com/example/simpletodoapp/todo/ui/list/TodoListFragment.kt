@@ -34,6 +34,10 @@ class TodoListFragment : Fragment() {
     ): View = FragmentTodoListBinding.inflate(inflater, container, false).apply {
         todoRecyclerView.adapter = adapter
         todoRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), VERTICAL))
+
+        navigateTodoAddButton.setOnClickListener {
+            navController.navigate(R.id.action_todoListFragment_to_todoInsertFragment)
+        }
     }.also { binding ->
         recyclerView = binding.todoRecyclerView
 
@@ -42,7 +46,7 @@ class TodoListFragment : Fragment() {
             .onEach { todos ->
                 val todoUiStates = todos.map { todo ->
                     todo.toTodoUiState(onClick = {
-                        navController.navigate(R.id.action_todoListFragment_to_todoInsertFragment)
+                        /* TODO: 2023-04-30 일 02:54, Navigate to todo detail screen */
                     })
                 }
 
