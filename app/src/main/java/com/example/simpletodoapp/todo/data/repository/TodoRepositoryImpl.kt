@@ -24,4 +24,8 @@ class TodoRepositoryImpl @Inject constructor(
     override suspend fun insertTodo(todo: Todo) = withContext(dispatcher) {
         dao.insertTodo(todo.toTodoEntity())
     }
+
+    override suspend fun deleteTodo(todo: Todo) = withContext(dispatcher) {
+        dao.deleteTodo(todo = todo.toTodoEntity())
+    }
 }

@@ -74,4 +74,38 @@ class TodoDaoTest {
         job.cancel()
     }
 
+
+    @Test
+    fun deleteTodo_deletedTodoNotInDatabase() = runTest {
+        // arrange
+        val todos = (1..10).map {
+            TodoEntity(
+                id = it.toLong(),
+                todo = "todo $it",
+                description = "description $it"
+            )
+        }
+
+        for (todo in todos) {
+            sut.insertTodo(todo = todo)
+        }
+
+        // act
+        val todoToDelete = todos[0]
+        sut.deleteTodo(todo = todoToDelete)
+
+        // assert
+        lateinit var todosFromDatabase: List<TodoEntity>
+
+        val job = launch(testDispatcher) {
+            sut.getTodos().collect {
+                todosFromDatabase = it
+            }
+        }
+        advanceUntilIdle()
+
+        assertThat(todos).contains(todoToDelete)
+        assertThat(todosFromDatabase).doesNotContain(todoToDelete)
+        job.cancel()
+    }
 }

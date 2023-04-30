@@ -11,11 +11,14 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.simpletodoapp.R
 import com.example.simpletodoapp.databinding.FragmentTodoListBinding
+import com.example.simpletodoapp.todo.ui.mapper.toTodo
 import com.example.simpletodoapp.todo.ui.mapper.toTodoUiState
+import com.example.simpletodoapp.todo.ui.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,13 +30,33 @@ class TodoListFragment : Fragment() {
     private var recyclerView: RecyclerView? = null
     private val navController by lazy { findNavController() }
 
+    private val itemTouchHelper by lazy {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder,
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.layoutPosition
+
+                viewModel.deleteTodo(todo = adapter.currentList[position].toTodo())
+                showToast(getString(R.string.todo_deleted))
+            }
+        })
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View = FragmentTodoListBinding.inflate(inflater, container, false).apply {
         todoRecyclerView.adapter = adapter
         todoRecyclerView.addItemDecoration(DividerItemDecoration(requireContext(), VERTICAL))
+        itemTouchHelper.attachToRecyclerView(todoRecyclerView)
 
         navigateTodoAddButton.setOnClickListener {
             navController.navigate(R.id.action_todoListFragment_to_todoInsertFragment)

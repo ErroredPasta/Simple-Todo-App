@@ -11,3 +11,9 @@ internal fun Todo.toTodoUiState(
     description = description,
     onClick = onClick
 )
+
+internal fun TodoUiState.toTodo() = Todo(
+    id = id,
+    todo = todo,
+    description = description
+)
