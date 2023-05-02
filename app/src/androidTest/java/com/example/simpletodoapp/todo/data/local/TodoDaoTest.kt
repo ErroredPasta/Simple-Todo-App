@@ -27,7 +27,6 @@ class TodoDaoTest {
 
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
-    private val testDispatcher get() = testCoroutineRule.testDispatcher
 
     @Before
     fun setUp() {
@@ -62,7 +61,7 @@ class TodoDaoTest {
         // assert
         lateinit var todosFromDatabase: List<TodoEntity>
 
-        val job = launch(testDispatcher) {
+        val job = launch {
             sut.getTodos().collect {
                 todosFromDatabase = it
             }
@@ -97,7 +96,7 @@ class TodoDaoTest {
         // assert
         lateinit var todosFromDatabase: List<TodoEntity>
 
-        val job = launch(testDispatcher) {
+        val job = launch {
             sut.getTodos().collect {
                 todosFromDatabase = it
             }
