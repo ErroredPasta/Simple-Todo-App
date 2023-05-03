@@ -9,6 +9,9 @@ interface TodoDao {
     @Query("SELECT * FROM $TODO_TABLE_NAME")
     fun getTodos(): Flow<List<TodoEntity>>
 
+    @Query("SELECT * FROM $TODO_TABLE_NAME WHERE id = :id")
+    suspend fun getTodoDetail(id: Long): TodoDetailEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTodo(todo: TodoEntity)
 

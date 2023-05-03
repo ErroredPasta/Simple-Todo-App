@@ -46,12 +46,7 @@ class TodoDaoTest {
     @Test
     fun insertMultipleTodos_thenGetAllTodosSuccessfully() = runTest {
         // arrange
-        val todos = (1..10).map {
-            TodoEntity(
-                todo = "todo $it",
-                description = "description $it"
-            )
-        }
+        val todos = (1..10).createTodoEntityFromRange(createNewTodo = true)
 
         // act
         for (todo in todos) {
@@ -77,15 +72,7 @@ class TodoDaoTest {
     @Test
     fun deleteTodo_deletedTodoNotInDatabase() = runTest {
         // arrange
-        val todos = (1..10).map {
-            TodoEntity(
-                id = it.toLong(),
-                todo = "todo $it",
-                description = "description $it"
-            )
-        }
-
-        for (todo in todos) {
+        val todos = (1..10).createTodoEntityFromRange(createNewTodo = false).onEach { todo ->
             sut.insertTodo(todo = todo)
         }
 
@@ -107,4 +94,47 @@ class TodoDaoTest {
         assertThat(todosFromDatabase).doesNotContain(todoToDelete)
         job.cancel()
     }
+
+    @Test
+    fun getTodoDetail_whenAnEntityWithGivenIdExists_thenSuccessfullyGetTheDetail() = runTest {
+        // arrange
+        (1..10).createTodoEntityFromRange(createNewTodo = false).forEach { todo ->
+            sut.insertTodo(todo = todo)
+        }
+
+        // act
+        val id = 1L
+        val todoDetailEntity = sut.getTodoDetail(id = id)
+
+        // assert
+        assertThat(todoDetailEntity).isNotNull()
+        assertThat(todoDetailEntity!!.id).isEqualTo(id)
+    }
+
+    @Test
+    fun getTodoDetail_whenNoEntityHasGivenId_thenReturnNull() = runTest {
+        // arrange
+        (1..10).createTodoEntityFromRange(createNewTodo = false).forEach { todo ->
+            sut.insertTodo(todo = todo)
+        }
+
+        // act
+        val id = 100L // no entity has 100L as id
+        val todoDetail = sut.getTodoDetail(id = id)
+
+        // assert
+        assertThat(todoDetail).isNull()
+    }
+
+    // region helper functions =====================================================================
+    private fun IntRange.createTodoEntityFromRange(
+        createNewTodo: Boolean = false,
+    ): List<TodoEntity> = map {
+        TodoEntity(
+            id = if (createNewTodo) 0L else it.toLong(),
+            todo = "todo $it",
+            description = "description $it"
+        )
+    }
+    // endregion helper functions ==================================================================
 }

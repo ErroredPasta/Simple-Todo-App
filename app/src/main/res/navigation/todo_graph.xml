@@ -13,11 +13,23 @@
         <action
             android:id="@+id/action_todoListFragment_to_todoInsertFragment"
             app:destination="@id/todoInsertFragment" />
+        <action
+            android:id="@+id/action_todoListFragment_to_todoDetailFragment"
+            app:destination="@id/todoDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/todoInsertFragment"
         android:name="com.example.simpletodoapp.todo.ui.insert.TodoInsertFragment"
         android:label="TodoInsertFragment"
         tools:layout="@layout/fragment_todo_insert" />
+    <fragment
+        android:id="@+id/todoDetailFragment"
+        android:name="com.example.simpletodoapp.todo.ui.detail.TodoDetailFragment"
+        android:label="TodoDetailFragment"
+        tools:layout="@layout/fragment_todo_detail">
+        <argument
+            android:name="todo_id"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

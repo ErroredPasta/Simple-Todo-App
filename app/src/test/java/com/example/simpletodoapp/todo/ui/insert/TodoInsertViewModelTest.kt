@@ -1,6 +1,7 @@
 package com.example.simpletodoapp.todo.ui.insert
 
 import com.example.simpletodoapp.core.TestCoroutineRule
+import com.example.simpletodoapp.todo.createTodoFromRange
 import com.example.simpletodoapp.todo.data.FakeTodoRepository
 import com.example.simpletodoapp.todo.domain.Todo
 import com.example.simpletodoapp.todo.domain.TodoRepository
@@ -22,13 +23,7 @@ class TodoInsertViewModelTest {
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
 
-    private val initialTodoList = (1..10).map {
-        Todo(
-            id = it.toLong(),
-            todo = "todo $it",
-            description = "description $it"
-        )
-    }
+    private val initialTodoList = (1..10).createTodoFromRange(createNewTodo = false)
 
     @Before
     fun setup() {

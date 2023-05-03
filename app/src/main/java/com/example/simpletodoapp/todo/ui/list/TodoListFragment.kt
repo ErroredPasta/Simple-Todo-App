@@ -69,7 +69,7 @@ class TodoListFragment : Fragment() {
             .onEach { todos ->
                 val todoUiStates = todos.map { todo ->
                     todo.toTodoUiState(onClick = {
-                        /* TODO: 2023-04-30 일 02:54, Navigate to todo detail screen */
+                        navigateToDetailScreen(todoId = todo.id)
                     })
                 }
 
@@ -81,5 +81,11 @@ class TodoListFragment : Fragment() {
         super.onDestroy()
         recyclerView?.adapter = null
         recyclerView = null
+    }
+
+    private fun navigateToDetailScreen(todoId: Long) {
+        navController.navigate(
+            TodoListFragmentDirections.actionTodoListFragmentToTodoDetailFragment(todoId = todoId)
+        )
     }
 }

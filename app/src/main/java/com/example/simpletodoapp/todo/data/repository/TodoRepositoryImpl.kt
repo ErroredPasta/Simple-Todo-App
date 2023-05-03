@@ -2,8 +2,11 @@ package com.example.simpletodoapp.todo.data.repository
 
 import com.example.simpletodoapp.todo.data.local.TodoDao
 import com.example.simpletodoapp.todo.data.mapper.toTodo
+import com.example.simpletodoapp.todo.data.mapper.toTodoDetail
 import com.example.simpletodoapp.todo.data.mapper.toTodoEntity
 import com.example.simpletodoapp.todo.domain.Todo
+import com.example.simpletodoapp.todo.domain.TodoDetail
+import com.example.simpletodoapp.todo.domain.TodoException
 import com.example.simpletodoapp.todo.domain.TodoRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +16,7 @@ import javax.inject.Inject
 
 class TodoRepositoryImpl @Inject constructor(
     private val dao: TodoDao,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
 ) : TodoRepository {
     override fun getTodos(): Flow<List<Todo>> {
         return dao.getTodos().map { todos ->
@@ -21,8 +24,13 @@ class TodoRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getTodoDetail(id: Long): TodoDetail = withContext(dispatcher) {
+        return@withContext dao.getTodoDetail(id = id)?.toTodoDetail()
+            ?: throw TodoException.NoTodoDetailFound(id = id)
+    }
+
     override suspend fun insertTodo(todo: Todo) = withContext(dispatcher) {
-        dao.insertTodo(todo.toTodoEntity())
+        dao.insertTodo(todo = todo.toTodoEntity())
     }
 
     override suspend fun deleteTodo(todo: Todo) = withContext(dispatcher) {
