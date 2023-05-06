@@ -50,7 +50,7 @@ class TodoDaoTest {
 
         // act
         for (todo in todos) {
-            sut.insertTodo(todo = todo)
+            sut.insertTodo(todoDetailEntity = todo)
         }
 
         // assert
@@ -73,7 +73,7 @@ class TodoDaoTest {
     fun deleteTodo_deletedTodoNotInDatabase() = runTest {
         // arrange
         val todos = (1..10).createTodoEntityFromRange(createNewTodo = false).onEach { todo ->
-            sut.insertTodo(todo = todo)
+            sut.insertTodo(todoDetailEntity = todo)
         }
 
         // act
@@ -99,7 +99,7 @@ class TodoDaoTest {
     fun getTodoDetail_whenAnEntityWithGivenIdExists_thenSuccessfullyGetTheDetail() = runTest {
         // arrange
         (1..10).createTodoEntityFromRange(createNewTodo = false).forEach { todo ->
-            sut.insertTodo(todo = todo)
+            sut.insertTodo(todoDetailEntity = todo)
         }
 
         // act
@@ -115,7 +115,7 @@ class TodoDaoTest {
     fun getTodoDetail_whenNoEntityHasGivenId_thenReturnNull() = runTest {
         // arrange
         (1..10).createTodoEntityFromRange(createNewTodo = false).forEach { todo ->
-            sut.insertTodo(todo = todo)
+            sut.insertTodo(todoDetailEntity = todo)
         }
 
         // act

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.simpletodoapp.databinding.FragmentTodoInsertBinding
-import com.example.simpletodoapp.todo.domain.Todo
+import com.example.simpletodoapp.todo.domain.TodoDetail
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +32,7 @@ class TodoInsertFragment : Fragment() {
     }.root
 
     private fun insertTodo(todo: String, description: String) {
-        viewModel.insertTodo(todo = Todo(
+        viewModel.insertTodo(todoDetail = TodoDetail(
             todo = todo,
             description = description.ifBlank { null }
         ))

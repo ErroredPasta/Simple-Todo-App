@@ -3,6 +3,7 @@ package com.example.simpletodoapp.todo.data.repository
 import com.example.simpletodoapp.todo.data.local.TodoDao
 import com.example.simpletodoapp.todo.data.mapper.toTodo
 import com.example.simpletodoapp.todo.data.mapper.toTodoDetail
+import com.example.simpletodoapp.todo.data.mapper.toTodoDetailEntity
 import com.example.simpletodoapp.todo.data.mapper.toTodoEntity
 import com.example.simpletodoapp.todo.domain.Todo
 import com.example.simpletodoapp.todo.domain.TodoDetail
@@ -29,8 +30,8 @@ class TodoRepositoryImpl @Inject constructor(
             ?: throw TodoException.NoTodoDetailFound(id = id)
     }
 
-    override suspend fun insertTodo(todo: Todo) = withContext(dispatcher) {
-        dao.insertTodo(todo = todo.toTodoEntity())
+    override suspend fun insertTodo(todoDetail: TodoDetail) = withContext(dispatcher) {
+        dao.insertTodo(todoDetailEntity = todoDetail.toTodoDetailEntity())
     }
 
     override suspend fun deleteTodo(todo: Todo) = withContext(dispatcher) {

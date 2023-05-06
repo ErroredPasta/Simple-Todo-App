@@ -2,7 +2,7 @@ package com.example.simpletodoapp.todo.ui.insert
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.simpletodoapp.todo.domain.Todo
+import com.example.simpletodoapp.todo.domain.TodoDetail
 import com.example.simpletodoapp.todo.domain.TodoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -12,9 +12,9 @@ import javax.inject.Inject
 class TodoInsertViewModel @Inject constructor(
     private val repository: TodoRepository
 ) : ViewModel() {
-    fun insertTodo(todo: Todo) {
+    fun insertTodo(todoDetail: TodoDetail) {
         viewModelScope.launch {
-            repository.insertTodo(todo = todo)
+            repository.insertTodo(todoDetail = todoDetail)
         }
     }
 }

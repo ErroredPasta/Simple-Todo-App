@@ -2,7 +2,7 @@ package com.example.simpletodoapp.todo.ui.detail
 
 import androidx.lifecycle.SavedStateHandle
 import com.example.simpletodoapp.core.TestCoroutineRule
-import com.example.simpletodoapp.todo.createTodoFromRange
+import com.example.simpletodoapp.todo.createTodoDetailFromRange
 import com.example.simpletodoapp.todo.data.FakeTodoRepository
 import com.example.simpletodoapp.todo.domain.TodoException
 import com.example.simpletodoapp.todo.domain.TodoRepository
@@ -26,7 +26,7 @@ class TodoDetailViewModelTest {
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
 
-    private val initialTodoList = (1..10).createTodoFromRange(createNewTodo = false)
+    private val initialTodoList = (1..10).createTodoDetailFromRange(createNewTodo = false)
     private val todoIdKey = "todo_id"
 
     @Before

@@ -13,7 +13,7 @@ interface TodoDao {
     suspend fun getTodoDetail(id: Long): TodoDetailEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTodo(todo: TodoEntity)
+    suspend fun insertTodo(todoDetailEntity: TodoDetailEntity)
 
     @Delete
     suspend fun deleteTodo(todo: TodoEntity)

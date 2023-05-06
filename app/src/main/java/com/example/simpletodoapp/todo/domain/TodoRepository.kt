@@ -8,6 +8,6 @@ interface TodoRepository {
     @Throws(TodoException.NoTodoDetailFound::class)
     suspend fun getTodoDetail(id: Long): TodoDetail
 
-    suspend fun insertTodo(todo: Todo)
+    suspend fun insertTodo(todoDetail: TodoDetail)
     suspend fun deleteTodo(todo: Todo)
 }

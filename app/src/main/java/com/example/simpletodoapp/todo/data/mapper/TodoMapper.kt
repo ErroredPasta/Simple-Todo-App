@@ -22,3 +22,9 @@ internal fun TodoDetailEntity.toTodoDetail() = TodoDetail(
     todo = todo,
     description = description
 )
+
+internal fun TodoDetail.toTodoDetailEntity() = TodoDetailEntity(
+    id = id,
+    todo = todo,
+    description = description
+)

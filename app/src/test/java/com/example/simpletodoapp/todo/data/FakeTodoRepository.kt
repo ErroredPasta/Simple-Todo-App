@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 class FakeTodoRepository(
-    initialList: List<Todo>,
+    initialList: List<TodoDetail>,
 ) : TodoRepository {
     private val list = MutableStateFlow(initialList)
 
@@ -22,8 +22,13 @@ class FakeTodoRepository(
             ?: throw TodoException.NoTodoDetailFound(id = id)
     }
 
-    override suspend fun insertTodo(todo: Todo) {
-        val todoToInsert = if (todo.id == 0L) todo.copy(id = list.value.size.toLong() + 1) else todo
+    override suspend fun insertTodo(todoDetail: TodoDetail) {
+        val todoToInsert = if (todoDetail.id == 0L) {
+            todoDetail.copy(id = list.value.size.toLong() + 1)
+        } else {
+            todoDetail
+        }
+
         list.update { it + todoToInsert }
     }
 
