@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.simpletodoapp.R
 import com.example.simpletodoapp.databinding.FragmentTodoInsertBinding
 import com.example.simpletodoapp.todo.domain.TodoDetail
 import com.google.android.material.textfield.TextInputLayout
@@ -16,26 +17,37 @@ import dagger.hilt.android.AndroidEntryPoint
 class TodoInsertFragment : Fragment() {
     private val navController by lazy { findNavController() }
     private val viewModel by viewModels<TodoInsertViewModel>()
+    private var showTodoError: ((CharSequence?) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View = FragmentTodoInsertBinding.inflate(inflater, container, false).apply {
         todoAddButton.setOnClickListener {
             insertTodo(
                 todo = todoInputLayout.inputText,
                 description = todoDescriptionInputLayout.inputText
             )
-            navController.navigateUp()
         }
+    }.also { binding ->
+        showTodoError = binding.todoInputLayout::setError
     }.root
 
     private fun insertTodo(todo: String, description: String) {
-        viewModel.insertTodo(todoDetail = TodoDetail(
-            todo = todo,
-            description = description.ifBlank { null }
-        ))
+        viewModel.insertTodo(
+            todoDetail = TodoDetail(
+                todo = todo,
+                description = description.ifBlank { null }
+            ),
+            onSuccess = { navController.navigateUp() },
+            onError = { showTodoError?.invoke(getString(R.string.todo_must_not_be_blank)) }
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        showTodoError = null
     }
 
     private val TextInputLayout.inputText: String

@@ -12,9 +12,19 @@ import javax.inject.Inject
 class TodoInsertViewModel @Inject constructor(
     private val repository: TodoRepository
 ) : ViewModel() {
-    fun insertTodo(todoDetail: TodoDetail) {
+    fun insertTodo(
+        todoDetail: TodoDetail,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        if (todoDetail.todo.isBlank()) {
+            onError()
+            return
+        }
+
         viewModelScope.launch {
             repository.insertTodo(todoDetail = todoDetail)
+            onSuccess()
         }
     }
 }
