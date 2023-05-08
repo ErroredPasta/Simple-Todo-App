@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.simpletodoapp.core.TestCoroutineRule
+import com.example.simpletodoapp.core.regexPatternForSearching
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -124,6 +125,35 @@ class TodoDaoTest {
 
         // assert
         assertThat(todoDetail).isNull()
+    }
+
+    @Test
+    fun getTodosContainingKeyword() = runTest {
+        // arrange
+        // run twice to have 2 same todos
+        repeat(times = 2) {
+            (1..10).createTodoEntityFromRange(createNewTodo = true).forEach { todo ->
+                sut.insertTodo(todoDetailEntity = todo)
+            }
+        }
+
+        // act
+        val keyword = "todo 1"
+        lateinit var todosFromDatabase: List<TodoEntity>
+        val job = launch {
+            sut.getTodosContainingKeyword(keyword = keyword).collect {
+                todosFromDatabase = it
+            }
+        }
+        advanceUntilIdle()
+
+        // assert
+        println(todosFromDatabase)
+
+        val regex = Regex(keyword.regexPatternForSearching, RegexOption.IGNORE_CASE)
+        assertThat(todosFromDatabase.filterNot { it.todo.contains(regex) }).isEmpty()
+
+        job.cancel()
     }
 
     // region helper functions =====================================================================

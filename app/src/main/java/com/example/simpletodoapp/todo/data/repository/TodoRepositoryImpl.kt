@@ -37,4 +37,10 @@ class TodoRepositoryImpl @Inject constructor(
     override suspend fun deleteTodo(todo: Todo) = withContext(dispatcher) {
         dao.deleteTodo(todo = todo.toTodoEntity())
     }
+
+    override fun getTodosContainingKeyword(keyword: String): Flow<List<Todo>> {
+        return dao.getTodosContainingKeyword(keyword = keyword).map { todos ->
+            todos.map { todo -> todo.toTodo() }
+        }
+    }
 }

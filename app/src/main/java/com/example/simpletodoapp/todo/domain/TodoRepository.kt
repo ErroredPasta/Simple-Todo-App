@@ -10,4 +10,6 @@ interface TodoRepository {
 
     suspend fun insertTodo(todoDetail: TodoDetail)
     suspend fun deleteTodo(todo: Todo)
+
+    fun getTodosContainingKeyword(keyword: String): Flow<List<Todo>>
 }

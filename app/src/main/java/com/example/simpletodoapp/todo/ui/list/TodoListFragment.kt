@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -60,6 +61,10 @@ class TodoListFragment : Fragment() {
 
         navigateTodoAddButton.setOnClickListener {
             navController.navigate(R.id.action_todoListFragment_to_todoInsertFragment)
+        }
+
+        todoSearchBar.editText!!.addTextChangedListener { keyword ->
+            viewModel.setSearchKeyword(keyword = keyword.toString())
         }
     }.also { binding ->
         recyclerView = binding.todoRecyclerView

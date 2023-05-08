@@ -1,6 +1,8 @@
 package com.example.simpletodoapp.todo.ui.list
 
 import com.example.simpletodoapp.core.TestCoroutineRule
+import com.example.simpletodoapp.core.regexPatternForSearching
+import com.example.simpletodoapp.todo.createTodoDetailFromRange
 import com.example.simpletodoapp.todo.data.FakeTodoRepository
 import com.example.simpletodoapp.todo.domain.Todo
 import com.example.simpletodoapp.todo.domain.TodoRepository
@@ -22,13 +24,7 @@ class TodoListViewModelTest {
     @get:Rule
     val testCoroutineRule = TestCoroutineRule()
 
-    private val initialTodoList = (1..10).map {
-        Todo(
-            id = it.toLong(),
-            todo = "todo $it",
-            description = "description $it"
-        )
-    }
+    private val initialTodoList = (1..10).createTodoDetailFromRange(createNewTodo = false)
 
     @Before
     fun setup() {
@@ -71,6 +67,34 @@ class TodoListViewModelTest {
         advanceUntilIdle()
 
         assertThat(collectedTodos).isEqualTo(initialTodoList - todoToDelete)
+        job.cancel()
+    }
+
+    @Test
+    fun `set keyword to search, only todos containing the keyword should be collected`() = runTest {
+        // arrange
+        (1..10).createTodoDetailFromRange(createNewTodo = true).forEach { todoDetail ->
+            repository.insertTodo(todoDetail = todoDetail)
+        }
+
+        // act
+        val keyword = "todo 1"
+        sut.setSearchKeyword(keyword)
+
+        // assert
+        lateinit var collectedTodos: List<Todo>
+        val job = launch {
+            sut.todos.collect {
+                collectedTodos = it
+            }
+        }
+        advanceUntilIdle()
+
+        println(collectedTodos)
+
+        val regex = Regex(keyword.regexPatternForSearching, RegexOption.IGNORE_CASE)
+        assertThat(collectedTodos.filterNot { it.todo.contains(regex) }).isEmpty()
+
         job.cancel()
     }
 }

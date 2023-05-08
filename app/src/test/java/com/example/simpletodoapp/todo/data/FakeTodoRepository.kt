@@ -1,11 +1,13 @@
 package com.example.simpletodoapp.todo.data
 
+import com.example.simpletodoapp.core.regexPatternForSearching
 import com.example.simpletodoapp.todo.domain.Todo
 import com.example.simpletodoapp.todo.domain.TodoDetail
 import com.example.simpletodoapp.todo.domain.TodoException
 import com.example.simpletodoapp.todo.domain.TodoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 
 class FakeTodoRepository(
@@ -34,5 +36,15 @@ class FakeTodoRepository(
 
     override suspend fun deleteTodo(todo: Todo) {
         list.update { it - todo }
+    }
+
+    override fun getTodosContainingKeyword(keyword: String): Flow<List<Todo>> {
+        val regex = Regex(keyword.regexPatternForSearching, RegexOption.IGNORE_CASE)
+
+        return flow {
+            list.collect { todoDetails ->
+                emit(todoDetails.filter { todoDetail -> todoDetail.todo.contains(regex = regex) })
+            }
+        }
     }
 }
