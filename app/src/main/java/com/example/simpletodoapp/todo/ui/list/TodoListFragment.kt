@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -20,6 +19,7 @@ import com.example.simpletodoapp.databinding.FragmentTodoListBinding
 import com.example.simpletodoapp.todo.ui.mapper.toTodo
 import com.example.simpletodoapp.todo.ui.mapper.toTodoUiState
 import com.example.simpletodoapp.todo.ui.showToast
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -63,8 +63,8 @@ class TodoListFragment : Fragment() {
             navController.navigate(R.id.action_todoListFragment_to_todoInsertFragment)
         }
 
-        todoSearchBar.editText!!.addTextChangedListener { keyword ->
-            viewModel.setSearchKeyword(keyword = keyword.toString())
+        todoSearchButton.setOnClickListener {
+            viewModel.setSearchKeyword(keyword = todoSearchBar.inputText)
         }
     }.also { binding ->
         recyclerView = binding.todoRecyclerView
@@ -93,4 +93,6 @@ class TodoListFragment : Fragment() {
             TodoListFragmentDirections.actionTodoListFragmentToTodoDetailFragment(todoId = todoId)
         )
     }
+
+    private val TextInputLayout.inputText: String get() = editText?.text?.toString() ?: ""
 }
