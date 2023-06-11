@@ -1,10 +1,10 @@
 package com.example.simpletodoapp.todo.data.repository
 
 import com.example.simpletodoapp.todo.data.local.TodoDao
-import com.example.simpletodoapp.todo.data.mapper.toTodo
 import com.example.simpletodoapp.todo.data.mapper.toTodoDetail
 import com.example.simpletodoapp.todo.data.mapper.toTodoDetailEntity
 import com.example.simpletodoapp.todo.data.mapper.toTodoEntity
+import com.example.simpletodoapp.todo.data.mapper.toTodoList
 import com.example.simpletodoapp.todo.domain.Todo
 import com.example.simpletodoapp.todo.domain.TodoDetail
 import com.example.simpletodoapp.todo.domain.TodoException
@@ -20,9 +20,7 @@ class TodoRepositoryImpl @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
 ) : TodoRepository {
     override fun getTodos(): Flow<List<Todo>> {
-        return dao.getTodos().map { todos ->
-            todos.map { todo -> todo.toTodo() }
-        }
+        return dao.getTodos().map { it.toTodoList() }
     }
 
     override suspend fun getTodoDetail(id: Long): TodoDetail = withContext(dispatcher) {
@@ -39,8 +37,6 @@ class TodoRepositoryImpl @Inject constructor(
     }
 
     override fun getTodosContainingKeyword(keyword: String): Flow<List<Todo>> {
-        return dao.getTodosContainingKeyword(keyword = keyword).map { todos ->
-            todos.map { todo -> todo.toTodo() }
-        }
+        return dao.getTodosContainingKeyword(keyword = keyword).map { it.toTodoList() }
     }
 }

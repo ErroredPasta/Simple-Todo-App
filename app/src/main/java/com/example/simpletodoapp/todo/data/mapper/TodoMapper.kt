@@ -28,3 +28,5 @@ internal fun TodoDetail.toTodoDetailEntity() = TodoDetailEntity(
     todo = todo,
     description = description
 )
+
+internal fun List<TodoEntity>.toTodoList() = map { todo -> todo.toTodo() }
