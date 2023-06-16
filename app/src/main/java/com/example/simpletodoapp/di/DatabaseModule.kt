@@ -2,6 +2,7 @@ package com.example.simpletodoapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.simpletodoapp.search_history.data.local.SearchHistoryDao
 import com.example.simpletodoapp.todo.data.local.TodoDao
 import com.example.simpletodoapp.todo.data.local.TodoDatabase
 import dagger.Module
@@ -26,4 +27,8 @@ object DatabaseModule {
 
     @Provides
     fun provideTodoDao(database: TodoDatabase): TodoDao = database.todoDao
+
+    @Provides
+    fun provideSearchHistoryDao(database: TodoDatabase): SearchHistoryDao =
+        database.searchHistoryDao
 }
