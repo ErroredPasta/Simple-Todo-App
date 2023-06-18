@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,7 +18,6 @@ import com.example.simpletodoapp.databinding.FragmentTodoListBinding
 import com.example.simpletodoapp.todo.ui.mapper.toTodo
 import com.example.simpletodoapp.todo.ui.mapper.toTodoUiState
 import com.example.simpletodoapp.todo.ui.showToast
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -63,23 +61,27 @@ class TodoListFragment : Fragment() {
             navController.navigate(R.id.action_todoListFragment_to_todoInsertFragment)
         }
 
-        todoSearchButton.setOnClickListener {
-            viewModel.setSearchKeyword(keyword = todoSearchBar.inputText)
-        }
+        root.setListeners(
+            onSearchClick = viewModel::setSearchKeyword,
+            onSearchHistoryClick = viewModel::setSearchKeyword,
+            onSearchHistoryDeleteClick = viewModel::deleteSearchHistory
+        )
     }.also { binding ->
         recyclerView = binding.todoRecyclerView
 
-        viewModel.todos
-            .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-            .onEach { todos ->
-                val todoUiStates = todos.map { todo ->
-                    todo.toTodoUiState(onClick = {
-                        navigateToDetailScreen(todoId = todo.id)
-                    })
-                }
+        viewModel.todos.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach { todos ->
+            val todoUiStates = todos.map { todo ->
+                todo.toTodoUiState(onClick = {
+                    navigateToDetailScreen(todoId = todo.id)
+                })
+            }
 
-                adapter.submitList(todoUiStates)
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
+            adapter.submitList(todoUiStates)
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewModel.searchHistories.flowWithLifecycle(viewLifecycleOwner.lifecycle).onEach {
+            binding.root.submitList(it)
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }.root
 
     override fun onDestroy() {
@@ -93,6 +95,4 @@ class TodoListFragment : Fragment() {
             TodoListFragmentDirections.actionTodoListFragmentToTodoDetailFragment(todoId = todoId)
         )
     }
-
-    private val TextInputLayout.inputText: String get() = editText?.text?.toString() ?: ""
 }
