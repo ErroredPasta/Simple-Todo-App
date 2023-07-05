@@ -21,7 +21,7 @@ import org.junit.runner.RunWith
 class SearchHistoryDaoTest {
     private lateinit var sut: SearchHistoryDao
     private lateinit var database: TodoDatabase
-    
+
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -31,7 +31,7 @@ class SearchHistoryDaoTest {
             context = ApplicationProvider.getApplicationContext(),
             klass = TodoDatabase::class.java
         ).build()
-        
+
         sut = database.searchHistoryDao
     }
 
@@ -39,14 +39,14 @@ class SearchHistoryDaoTest {
     fun tearDown() {
         database.close()
     }
-    
+
     @Test
     fun getSearchHistory_thenSuccessfullyGetHistoriesFromDatabase() = runTest {
         // arrange
         val searchHistories = (1..10).createSearchHistoryEntityFromRange().onEach {
             sut.insertSearchHistory(searchHistory = it)
         }
-        
+
         // act
         lateinit var collectedHistories: List<SearchHistoryEntity>
         val job = launch {
@@ -55,7 +55,7 @@ class SearchHistoryDaoTest {
             }
         }
         advanceUntilIdle()
-        
+
         // assert
         assertThat(collectedHistories).isEqualTo(searchHistories)
         job.cancel()
@@ -86,6 +86,30 @@ class SearchHistoryDaoTest {
     }
 
     @Test
+    fun insertSearchHistory_whenKeywordAlreadyExist_thenNothingChange() = runTest {
+        // arrange
+        val searchHistories = (1..10).createSearchHistoryEntityFromRange().onEach {
+            sut.insertSearchHistory(searchHistory = it)
+        }
+
+        // act
+        val duplicatedKeyword = searchHistories.first()
+        sut.insertSearchHistory(searchHistory = duplicatedKeyword)
+
+        // assert
+        lateinit var collectedHistories: List<SearchHistoryEntity>
+        val job = launch {
+            sut.getSearchHistory().collect {
+                collectedHistories = it
+            }
+        }
+        advanceUntilIdle()
+
+        assertThat(collectedHistories).isEqualTo(searchHistories)
+        job.cancel()
+    }
+
+    @Test
     fun deleteSearchHistory_thenNotIncludedInCollectedListFromDatabase() = runTest {
         // arrange
         val searchHistories = (1..10).createSearchHistoryEntityFromRange().onEach {
@@ -108,7 +132,7 @@ class SearchHistoryDaoTest {
         assertThat(collectedHistories).doesNotContain(deletedSearchHistory)
         job.cancel()
     }
-    
+
     // region helper function ======================================================================
     private fun IntRange.createSearchHistoryEntityFromRange(): List<SearchHistoryEntity> = map {
         SearchHistoryEntity(query = "Search history $it")
