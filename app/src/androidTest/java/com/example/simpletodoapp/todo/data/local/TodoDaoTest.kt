@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SmallTest
 import com.example.simpletodoapp.core.TestCoroutineRule
 import com.example.simpletodoapp.core.regexPatternForSearching
 import com.google.common.truth.Truth.assertThat
@@ -19,6 +20,7 @@ import org.junit.runner.RunWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
+@SmallTest
 class TodoDaoTest {
     private lateinit var sut: TodoDao
     private lateinit var database: TodoDatabase
