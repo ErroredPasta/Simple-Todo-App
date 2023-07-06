@@ -90,6 +90,16 @@ dependencies {
     // region Test Core ============================================================================
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
     // endregion Test Core =========================================================================
+
+    // region Fragment Testing =====================================================================
+    debugImplementation "androidx.fragment:fragment-testing:1.6.0"
+    // endregion Fragment Testing ==================================================================
+
+    // region MockK ================================================================================
+    def mockkVersion = '1.13.5'
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
+    androidTestImplementation "io.mockk:mockk-agent:$mockkVersion"
+    // endregion MockK =============================================================================
 }
 
 kapt {
