@@ -10,6 +10,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.action.ViewActions.pressImeActionButton
+import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -298,6 +299,17 @@ class TodoListFragmentTest {
         // assert
         onView(withId(R.id.search_bar_edit_text)).check(matches(not(hasFocus())))
         onView(withId(R.id.search_history_section)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun swipeToDeleteTodo_thenTodoShouldBeDeleted() {
+        // arrange
+        val todoList = (1..3).map { TodoDetail(id = it.toLong(), todo = "Todo $it") }
+        injectWithRequiredListAndLaunchFragment(todoList = todoList)
+
+        // act, assert
+        val deletedTodo = todoList.first()
+        onView(withChild(withText(deletedTodo.todo))).perform(swipeLeft()).check(doesNotExist())
     }
 
     // region helper function ======================================================================
