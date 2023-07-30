@@ -2,7 +2,7 @@
     <string name="app_name">Simple Todo App</string>
     <string name="todo">Todo</string>
     <string name="description">Description</string>
-    <string name="add_todo">add Todo</string>
+    <string name="add_todo">Add Todo</string>
     <string name="todo_deleted">Todo deleted</string>
     <string name="todo_detail_not_found">Todo detail not found</string>
     <string name="unknown_error_while_getting_todo_detail">Unknown error occurred while getting todo detail</string>
