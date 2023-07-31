@@ -125,6 +125,10 @@ dependencies {
     def lifecycleComposeVersion = "2.5.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleComposeVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycleComposeVersion"
+
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
     // endregion Compose ===========================================================================
 }
 
